@@ -1,11 +1,16 @@
 server:
   port: 80
 
+spring:
+  elasticsearch:
+    username: ${elasticsearch_username}
+    password: ${elasticsearch_password}
+
 app:
   auth:
-    tokenSecret: ${SECURITY_SECRET}
+    tokenSecret: ${security_secret}
     tokenExpirationMSec: 86400000
     tokenPrefix: "Bearer "
     headerString: "Authorization"
     cors:
-      allowedOrigins: ## TODO
+      allowedOrigins: http://130.61.181.245:80
