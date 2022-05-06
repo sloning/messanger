@@ -1,0 +1,13 @@
+app:
+  auth:
+    tokenSecret: ${SECURITY_SECRET}
+    tokenExpirationMSec: 86400000
+    tokenPrefix: "Bearer "
+    headerString: "Authorization"
+    cors:
+      allowedOrigins: http://localhost:8080, http://localhost:3000, https://web.postman.co
+
+spring:
+  elasticsearch:
+    username: elastic
+    password: boOw0-PDDcx==89-iGMX

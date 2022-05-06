@@ -1,0 +1,11 @@
+server:
+  port: 80
+
+app:
+  auth:
+    tokenSecret: ${SECURITY_SECRET}
+    tokenExpirationMSec: 86400000
+    tokenPrefix: "Bearer "
+    headerString: "Authorization"
+    cors:
+      allowedOrigins: ## TODO
