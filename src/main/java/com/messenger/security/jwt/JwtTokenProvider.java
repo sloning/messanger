@@ -5,7 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.JWTVerifier;
-import com.messenger.config.SecurityProperties;
+import com.messenger.config.AppProperties;
 import com.messenger.exception.JwtAuthenticationException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,20 +21,20 @@ import java.util.Map;
 public class JwtTokenProvider {
 
     private static final String ISSUER = "messenger";
-    private final SecurityProperties securityProperties;
+    private final AppProperties appProperties;
     private Algorithm algorithm;
 
-    public JwtTokenProvider(SecurityProperties securityProperties) {
-        this.securityProperties = securityProperties;
+    public JwtTokenProvider(AppProperties appProperties) {
+        this.appProperties = appProperties;
     }
 
     @PostConstruct
     public void init() {
-        algorithm = Algorithm.HMAC256(securityProperties.getAuth().getTokenSecret());
+        algorithm = Algorithm.HMAC256(appProperties.getAuth().getTokenSecret());
     }
 
     public String createToken(String id, String version) {
-        Date expirationDate = new Date(new Date().getTime() + securityProperties.getAuth().getTokenExpirationMSec());
+        Date expirationDate = new Date(new Date().getTime() + appProperties.getAuth().getTokenExpirationMSec());
 
         Map<String, String> claims = new HashMap<>();
         claims.put("id", id);
@@ -55,7 +55,7 @@ public class JwtTokenProvider {
                 throw new IllegalStateException("Duplicate key");
             }
         }
-        Date expirationDate = new Date(new Date().getTime() + securityProperties.getAuth().getTokenExpirationMSec());
+        Date expirationDate = new Date(new Date().getTime() + appProperties.getAuth().getTokenExpirationMSec());
 
         return JWT.create()
                 .withPayload(stringClaims)
@@ -65,8 +65,8 @@ public class JwtTokenProvider {
     }
 
     public String resolveToken(HttpServletRequest req) {
-        String bearerToken = req.getHeader(securityProperties.getAuth().getHeaderString());
-        if (bearerToken != null && bearerToken.startsWith(securityProperties.getAuth().getTokenPrefix())) {
+        String bearerToken = req.getHeader(appProperties.getAuth().getHeaderString());
+        if (bearerToken != null && bearerToken.startsWith(appProperties.getAuth().getTokenPrefix())) {
             return bearerToken.substring(7);
         }
         return null;

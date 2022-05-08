@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  messenger_mongodb:
+    container_name: messenger_mongodb
+    image: mongo:5.0
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${mongodb_username}
+      MONGO_INITDB_ROOT_PASSWORD: ${mongodb_password}
+
+  messenger_elastic:
+    container_name: messenger_elastic
+    build:
+      dockerfile: ./elasticsearch/Dockerfile
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    networks:
+      - elastic
+    environment:
+      discovery.type: single-node
+      ES_JAVA_OPTS: "-Xms1g -Xmx1g"
+
+  messenger:
+    container_name: messenger
+    build: .
+    restart: always
+    depends_on:
+      - messenger_mongodb
+      - messenger_elastic
+    links:
+      - messenger_mongodb
+      - messenger_elastic
+    environment:
+      security_secret: $security_secret
+      elasticsearch_host: http://messenger_elastic:9200
+      elasticsearch_username: elastic
+      elasticsearch_password: $elasticsearch_password

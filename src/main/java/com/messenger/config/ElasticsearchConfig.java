@@ -1,5 +1,6 @@
 package com.messenger.config;
 
+import lombok.RequiredArgsConstructor;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -10,9 +11,12 @@ import org.springframework.data.elasticsearch.config.AbstractElasticsearchConfig
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 
 @Configuration
-@EnableElasticsearchRepositories(basePackages = "com.messenger.repository")
+@RequiredArgsConstructor
 @ComponentScan(basePackages = {"com.messenger"})
+@EnableElasticsearchRepositories(basePackages = "com.messenger.repository")
 public class ElasticsearchConfig extends AbstractElasticsearchConfiguration {
+
+    private final AppProperties appProperties;
 
     @Bean
     @Override
@@ -20,7 +24,8 @@ public class ElasticsearchConfig extends AbstractElasticsearchConfiguration {
         final ClientConfiguration clientConfiguration =
                 ClientConfiguration
                         .builder()
-                        .connectedTo("localhost:9200")
+                        .connectedTo(appProperties.getDatabase().getElasticHost())
+                        .usingSsl()
                         .build();
 
         return RestClients.create(clientConfiguration).rest();

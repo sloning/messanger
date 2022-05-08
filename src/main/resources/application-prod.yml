@@ -14,3 +14,5 @@ app:
     headerString: "Authorization"
     cors:
       allowedOrigins: http://130.61.181.245:80
+  database:
+    elasticHost: ${elasticsearch_host}

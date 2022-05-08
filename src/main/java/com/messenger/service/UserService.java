@@ -23,20 +23,22 @@ public class UserService {
 
     public User findById(String id) {
         return userRepository.findById(id).orElseThrow(() ->
-                new EntityNotFoundException(String.format("User with id: %s was not found", id)));
+                new EntityNotFoundException(String.format("User with id: %s was not found", id))
+        );
+    }
+
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username).orElseThrow(() ->
+                new EntityNotFoundException(String.format("User with username: %s was not found", username))
+        );
+    }
+
+    public boolean isUserExists(String username) {
+        return userRepository.existsByUsername(username);
     }
 
     public List<User> findByName(String name, Pageable pageable) {
         return userRepository.findAllByName(name, pageable);
-    }
-
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(() ->
-                new EntityNotFoundException(String.format("User with email: %s was not found", email)));
-    }
-
-    public boolean isUserExists(String email) {
-        return userRepository.findByEmail(email).isPresent();
     }
 
     public User save(User user) {

@@ -9,7 +9,9 @@ import java.util.Optional;
 
 public interface UserRepository extends MongoRepository<User, String> {
 
-    public List<User> findAllByName(String name, Pageable pageable);
+    List<User> findAllByName(String name, Pageable pageable);
 
-    public Optional<User> findByEmail(String email);
+    Optional<User> findByUsername(String username);
+
+    boolean existsByUsername(String username);
 }

@@ -1,6 +1,5 @@
 package com.messenger.security.jwt;
 
-import com.messenger.exception.EntityNotFoundException;
 import com.messenger.model.User;
 import com.messenger.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,17 +15,11 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String email)
+    public UserDetails loadUserByUsername(String username)
             throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(email).orElseThrow(() ->
-                new UsernameNotFoundException("User not found with email : " + email));
-
-        return JwtUserFactory.create(user);
-    }
-
-    public UserDetails loadUserById(String id) {
-        User user = userRepository.findById(id).orElseThrow(() ->
-                new EntityNotFoundException(String.format("User with id: %s was not found", id)));
+        User user = userRepository.findByUsername(username).orElseThrow(() ->
+                new UsernameNotFoundException("User not found with username : " + username)
+        );
 
         return JwtUserFactory.create(user);
     }

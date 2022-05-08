@@ -28,7 +28,9 @@ public class AuthService {
 
     public Map<String, String> registerUser(RegisterDto registerDto) {
         if (userService.isUserExists(registerDto.getUsername())) {
-            throw new EntityAlreadyExistsException(String.format("User with email: %s already exists", registerDto.getUsername()));
+            throw new EntityAlreadyExistsException(
+                    String.format("User with email: %s already exists", registerDto.getUsername())
+            );
         }
 
         User user = userMapper.createFrom(registerDto);
@@ -39,7 +41,7 @@ public class AuthService {
     }
 
     public Map<String, String> loginUser(LoginDto loginDto) {
-        User user = userService.findByEmail(loginDto.getUsername());
+        User user = userService.findByUsername(loginDto.getUsername());
 
         checkPasswords(user.getPassword(), loginDto.getPassword());
 

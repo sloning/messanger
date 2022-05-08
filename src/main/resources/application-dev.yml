@@ -1,3 +1,8 @@
+spring:
+  elasticsearch:
+    username: ${elasticsearch_username}
+    password: ${elasticsearch_password}
+
 app:
   auth:
     tokenSecret: ${security_secret}
@@ -6,8 +11,5 @@ app:
     headerString: "Authorization"
     cors:
       allowedOrigins: http://localhost:8080, http://localhost:3000
-
-spring:
-  elasticsearch:
-    username: ${elasticsearch_username}
-    password: ${elasticsearch_password}
+  database:
+    elasticHost: ${elasticsearch_host}
