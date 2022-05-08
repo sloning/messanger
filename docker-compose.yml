@@ -15,8 +15,6 @@ services:
     ports:
       - "9200:9200"
       - "9300:9300"
-    networks:
-      - elastic
     environment:
       discovery.type: single-node
       ES_JAVA_OPTS: "-Xms1g -Xmx1g"
@@ -28,11 +26,9 @@ services:
     depends_on:
       - messenger_mongodb
       - messenger_elastic
-    links:
-      - messenger_mongodb
-      - messenger_elastic
     environment:
       security_secret: $security_secret
-      elasticsearch_host: http://messenger_elastic:9200
+      elasticsearch_host: messenger_elastic:9200
       elasticsearch_username: elastic
       elasticsearch_password: $elasticsearch_password
+      mongodb_host: messenger_mongodb

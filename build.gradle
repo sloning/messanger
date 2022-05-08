@@ -48,14 +48,18 @@ String imageName = "${project.name}"
 docker {
     dockerfile file('Dockerfile')
     name imageName
+    files bootJar.archivePath
 }
 
 dockerRun {
     name "${project.name}-container"
     image imageName
     ports '80:80'
+    arguments '--network=messanger_default'
     env 'security_secret': System.getenv('security_secret'),
-            'elasticsearch_host': 'http://messenger_elastic:9200',
+            'elasticsearch_host': 'messenger_elastic:9200',
             'elasticsearch_username': 'elastic',
-            'elasticsearch_password': System.getenv('elasticsearch_password')
+            'elasticsearch_password': System.getenv('elasticsearch_password'),
+            'mongodb_host': 'messenger_mongodb'
+    clean true
 }

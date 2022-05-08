@@ -5,6 +5,9 @@ spring:
   elasticsearch:
     username: ${elasticsearch_username}
     password: ${elasticsearch_password}
+  data:
+    mongodb:
+      host: ${mongodb_host}
 
 app:
   auth:
