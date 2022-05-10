@@ -9,14 +9,19 @@
 * OpenAPI
 * MongoDB
 * ElasticSearch
+* Docker
+* Jenkins
 
 ## Сборка и запуск
 
-Необходимо указать следующие системные переменные:
-elasticsearch_username, elasticsearch_password, security_secret.
-
-Сборка и запуск приложения:
+Запустить базы данных:
 
 ```
-./gradlew bootRun
+docker-compose up -d
+```
+
+Запустить приложение:
+
+```
+./gradlew bootJar docker dockerRun
 ```

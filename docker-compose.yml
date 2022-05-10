@@ -4,31 +4,29 @@ services:
   messenger_mongodb:
     container_name: messenger_mongodb
     image: mongo:5.0
+    volumes:
+      - /var/lib/messenger_mongodb/data
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${mongodb_username}
       MONGO_INITDB_ROOT_PASSWORD: ${mongodb_password}
+      MONGO_INITDB_DATABASE: test
 
   messenger_elastic:
     container_name: messenger_elastic
     build:
-      dockerfile: ./elasticsearch/Dockerfile
+      context: ./elasticsearch
+      dockerfile: Dockerfile
     ports:
       - "9200:9200"
       - "9300:9300"
+    volumes:
+      - /var/liv/messenger_elastic/data
     environment:
       discovery.type: single-node
       ES_JAVA_OPTS: "-Xms1g -Xmx1g"
+      xpack.security.transport.ssl.enabled: false
+      xpack.security.enabled: false
 
-  messenger:
-    container_name: messenger
-    build: .
-    restart: always
-    depends_on:
-      - messenger_mongodb
-      - messenger_elastic
-    environment:
-      security_secret: $security_secret
-      elasticsearch_host: messenger_elastic:9200
-      elasticsearch_username: elastic
-      elasticsearch_password: $elasticsearch_password
-      mongodb_host: messenger_mongodb
+networks:
+  default:
+    driver: bridge
