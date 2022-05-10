@@ -2,6 +2,12 @@ spring:
   elasticsearch:
     username: ${elasticsearch_username}
     password: ${elasticsearch_password}
+  data:
+    mongodb:
+      host: ${mongodb_host}
+      username: ${mongodb_username}
+      password: ${mongodb_password}
+      database: messenger
 
 app:
   auth:

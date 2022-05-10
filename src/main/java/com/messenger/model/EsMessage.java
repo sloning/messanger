@@ -5,6 +5,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
+import org.springframework.data.elasticsearch.annotations.Setting;
 
 import java.util.Date;
 
@@ -12,6 +15,7 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @Document(indexName = "messageindex")
+@Setting(settingPath = "elasticsearch/message-settings.json")
 public class EsMessage {
 
     @Id
@@ -19,6 +23,7 @@ public class EsMessage {
     private String conversation;
     private String sender;
     private String receiver;
+    @Field(type = FieldType.Text, analyzer = "ru_en")
     private String text;
     private String imageId;
     private Date date = new Date();

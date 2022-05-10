@@ -1,0 +1,35 @@
+{
+  "analysis": {
+    "analyzer": {
+      "ru_en": {
+        "tokenizer": "standard",
+        "filter": [
+          "lowercase",
+          "ru_RU_dictionary",
+          "en_US_dictionary"
+        ],
+        "char_filter": [
+          "html_strip"
+        ]
+      }
+    },
+    "filter": {
+      "ru_RU_stemmer": {
+        "type": "stemmer",
+        "language": "russian"
+      },
+      "en_US_stemmer": {
+        "type": "stemmer",
+        "language": "english"
+      },
+      "ru_RU_dictionary": {
+        "type": "hunspell",
+        "locale": "ru_RU"
+      },
+      "en_US_dictionary": {
+        "type": "hunspell",
+        "locale": "en_US"
+      }
+    }
+  }
+}

@@ -29,7 +29,7 @@ public class AuthService {
     public Map<String, String> registerUser(RegisterDto registerDto) {
         if (userService.isUserExists(registerDto.getUsername())) {
             throw new EntityAlreadyExistsException(
-                    String.format("User with email: %s already exists", registerDto.getUsername())
+                    String.format("User with username: %s already exists", registerDto.getUsername())
             );
         }
 

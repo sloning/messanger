@@ -10,6 +10,7 @@ spring:
       host: ${mongodb_host}
       username: ${mongodb_username}
       password: ${mongodb_password}
+      database: messenger
 
 app:
   auth:

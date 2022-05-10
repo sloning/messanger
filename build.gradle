@@ -55,7 +55,7 @@ dockerRun {
     name "${project.name}"
     image imageName
     ports '80:80'
-    arguments '--network=messanger_default'
+    arguments '--network=messenger_default'
     env 'security_secret': System.getenv('security_secret'),
             'elasticsearch_host': 'messenger_elastic:9200',
             'elasticsearch_username': 'elastic',

@@ -1,3 +1,3 @@
-FROM docker.elastic.co/elasticsearch/elasticsearch:8.2.0
+FROM docker.elastic.co/elasticsearch/elasticsearch:7.17.3
 
 ADD elastic-hunspell/hunspell /usr/share/elasticsearch/config/hunspell
