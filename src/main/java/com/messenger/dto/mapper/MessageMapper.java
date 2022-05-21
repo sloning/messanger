@@ -32,8 +32,7 @@ public class MessageMapper {
         Message message = new Message();
 
         message.setConversation(messageDto.getConversation());
-        message.setReceiver(messageDto.getReceiver());
-        message.setSender(messageDto.getSender());
+        message.setSender(authenticationFacade.getUserId());
         message.setText(messageDto.getText());
         message.setImageId(messageDto.getImageId());
         message.setDate(messageDto.getDate());
