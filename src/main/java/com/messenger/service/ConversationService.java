@@ -28,10 +28,7 @@ public class ConversationService {
     private List<Conversation> getConversations() {
         String userId = authenticationFacade.getUserId();
 
-        List<Conversation> conversations = conversationRepository.findAllByUser1(userId);
-        conversations.addAll(conversationRepository.findAllByUser2(userId));
-
-        return conversations;
+        return conversationRepository.findAllByParticipantsContaining(userId);
     }
 
     public ConversationDto save(ConversationDto conversationDto) {
@@ -44,16 +41,17 @@ public class ConversationService {
     private void checkPermission(Conversation conversation) {
         String userId = authenticationFacade.getUserId();
 
-        if (!Objects.equals(userId, conversation.getUser1()) && !Objects.equals(userId, conversation.getUser2())) {
+        if (!Objects.equals(userId, conversation.getFirstUser()) &&
+                !Objects.equals(userId, conversation.getSecondUser())) {
             throw new BadRequestException("You can not create new conversations for other users");
         }
 
         List<Conversation> conversations = getConversations();
         for (Conversation dbConversation : conversations) {
-            if (Objects.equals(dbConversation.getUser1(), conversation.getUser1()) &&
-                    Objects.equals(dbConversation.getUser2(), conversation.getUser2()) ||
-                    Objects.equals(dbConversation.getUser1(), conversation.getUser2()) &&
-                            Objects.equals(dbConversation.getUser2(), conversation.getUser1())) {
+            if (Objects.equals(dbConversation.getFirstUser(), conversation.getFirstUser()) &&
+                    Objects.equals(dbConversation.getSecondUser(), conversation.getSecondUser()) ||
+                    Objects.equals(dbConversation.getFirstUser(), conversation.getSecondUser()) &&
+                            Objects.equals(dbConversation.getSecondUser(), conversation.getFirstUser())) {
                 throw new EntityAlreadyExistsException("This conversation is already exists");
             }
         }

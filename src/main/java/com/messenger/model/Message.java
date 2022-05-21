@@ -12,7 +12,6 @@ public class Message {
     private String id;
     private String conversation;
     private String sender;
-    private String receiver;
     private String text;
     private String imageId;
     private Date date = new Date();

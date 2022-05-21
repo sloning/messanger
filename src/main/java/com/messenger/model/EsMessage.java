@@ -22,7 +22,6 @@ public class EsMessage {
     private String id;
     private String conversation;
     private String sender;
-    private String receiver;
     @Field(type = FieldType.Text, analyzer = "ru_en")
     private String text;
     private String imageId;
@@ -33,7 +32,6 @@ public class EsMessage {
         id = message.getId();
         conversation = message.getConversation();
         sender = message.getSender();
-        receiver = message.getReceiver();
         text = message.getText();
         imageId = message.getImageId();
         date = message.getDate();

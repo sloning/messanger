@@ -20,7 +20,6 @@ public class MessageMapper {
         messageDto.setDate(message.getDate());
         messageDto.setConversation(message.getConversation());
         messageDto.setRead(message.isRead());
-        messageDto.setReceiver(message.getReceiver());
         messageDto.setSender(message.getSender());
         messageDto.setSentByUser(message.getSender().equals(authenticationFacade.getUserId()));
         messageDto.setImageId(message.getImageId());
