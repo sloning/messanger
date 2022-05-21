@@ -31,8 +31,7 @@ public class ConversationMapper {
         ConversationDto conversationDto = new ConversationDto();
 
         conversationDto.setId(conversation.getId());
-        conversationDto.setUser1(conversation.getUser1());
-        conversationDto.setUser2(conversation.getUser2());
+        conversationDto.setParticipants(conversation.getParticipants());
         conversationDto.setLastMessage(getLastMessage(conversation));
         conversationDto.setImage(getImage(conversation));
 
@@ -50,11 +49,13 @@ public class ConversationMapper {
 
     private byte[] getImage(Conversation conversation) {
         String userId = authenticationFacade.getUserId();
-        if (conversation.getUser1().equals(userId)) {
-            return getImageBytes(conversation.getUser2());
-        } else {
-            return getImageBytes(conversation.getUser1());
+        if (conversation.getParticipants().size() > 2) {
+            return null;
         }
+        if (conversation.getFirstUser().equals(userId)) {
+            return getImageBytes(conversation.getSecondUser());
+        }
+        return getImageBytes(conversation.getFirstUser());
     }
 
     private byte[] getImageBytes(String userId) {
@@ -66,8 +67,7 @@ public class ConversationMapper {
         Conversation conversation = new Conversation();
 
         conversation.setId(conversationDto.getId());
-        conversation.setUser1(conversationDto.getUser1());
-        conversation.setUser2(conversationDto.getUser2());
+        conversation.setParticipants(conversationDto.getParticipants());
 
         return conversation;
     }

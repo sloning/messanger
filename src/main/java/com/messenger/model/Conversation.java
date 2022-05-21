@@ -3,11 +3,21 @@ package com.messenger.model;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 
+import java.util.List;
+
 @Data
 public class Conversation {
 
     @Id
     private String id;
-    private String user1;
-    private String user2;
+    private List<String> participants;
+
+    public String getFirstUser() {
+        return participants.get(0);
+    }
+
+    public String getSecondUser() {
+        return participants.get(1);
+    }
+
 }

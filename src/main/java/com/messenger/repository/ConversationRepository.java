@@ -7,7 +7,6 @@ import java.util.List;
 
 public interface ConversationRepository extends MongoRepository<Conversation, String> {
 
-    List<Conversation> findAllByUser1(String user1);
+    List<Conversation> findAllByParticipantsContaining(String user);
 
-    List<Conversation> findAllByUser2(String user2);
 }
