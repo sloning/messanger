@@ -1,6 +1,5 @@
 package com.messenger.controller;
 
-import com.messenger.dto.mapper.UserMapper;
 import com.messenger.dto.model.PasswordChangeDto;
 import com.messenger.dto.model.Response;
 import com.messenger.dto.model.UserDto;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.io.IOException;
 import java.util.Map;
 
 @RestController
@@ -23,16 +21,15 @@ public class UserController {
 
     private final UserService userService;
     private final AuthService authService;
-    private final UserMapper userMapper;
 
     @GetMapping("/{id}")
     public Response<UserDto> findUserById(@PathVariable String id) {
-        return new Response<>(userMapper.createFrom(userService.findById(id)));
+        return new Response<>(userService.getUserDtoById(id));
     }
 
     @GetMapping("/name/{name}")
     public Response<Page<UserDto>> findUserByName(@PathVariable String name, Pageable pageable) {
-        return new Response<>(userMapper.createPageFrom(userService.findByName(name, pageable)));
+        return new Response<>(userService.findByName(name, pageable));
     }
 
     @PutMapping("/password")
@@ -42,16 +39,16 @@ public class UserController {
 
     @PutMapping("/name")
     public Response<UserDto> updateName(@RequestBody String newName) {
-        return new Response<>(userMapper.createFrom(userService.updateName(newName)));
+        return new Response<>(userService.updateName(newName));
     }
 
     @PutMapping("/description")
     public Response<UserDto> updateDescription(@RequestBody String newDescription) {
-        return new Response<>(userMapper.createFrom(userService.updateDescription(newDescription)));
+        return new Response<>(userService.updateDescription(newDescription));
     }
 
     @PutMapping("/image")
-    public Response<UserDto> updateImage(@RequestParam("image") MultipartFile newImage) throws IOException {
-        return new Response<>(userMapper.createFrom(userService.updateImage(newImage)));
+    public Response<UserDto> updateImage(@RequestParam("image") MultipartFile newImage) {
+        return new Response<>(userService.updateImage(newImage));
     }
 }

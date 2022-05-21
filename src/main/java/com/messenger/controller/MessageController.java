@@ -1,8 +1,8 @@
 package com.messenger.controller;
 
+import com.messenger.dto.model.MessageDto;
 import com.messenger.dto.model.Response;
 import com.messenger.model.EsMessage;
-import com.messenger.model.Message;
 import com.messenger.service.MessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,8 +20,8 @@ public class MessageController {
     private final MessageService messageService;
 
     @PostMapping
-    public Response<Message> sendMessage(@Valid @RequestBody Message message) {
-        return new Response<>(messageService.save(message));
+    public Response<MessageDto> sendMessage(@Valid @RequestBody MessageDto messageDto) {
+        return new Response<>(messageService.save(messageDto));
     }
 
     @GetMapping("/search")
@@ -31,8 +31,8 @@ public class MessageController {
     }
 
     @GetMapping
-    public Response<Page<Message>> showConversation(@RequestParam String conversation,
-                                                    Pageable pageable) {
+    public Response<Page<MessageDto>> showConversation(@RequestParam String conversation,
+                                                       Pageable pageable) {
         return new Response<>(messageService.findByConversation(conversation, pageable));
     }
 

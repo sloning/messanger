@@ -9,6 +9,6 @@ public class UserDto {
     private String email;
     private String name;
     private String description;
-    private String imageId;
+    private byte[] image;
     private String publicKey;
 }

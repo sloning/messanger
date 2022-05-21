@@ -31,13 +31,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-//                .antMatchers("/api/v1/auth/**", "/swagger-ui/**", "/v3/api-docs/**")
-                .anyRequest()
+                .antMatchers("/api/*/auth/**", "/swagger-ui/**", "/v3/api-docs/**")
                 .permitAll()
-//                .anyRequest()
-//                .authenticated()
+                .anyRequest()
+                .authenticated()
                 .and()
-                .addFilterBefore(new JwtTokenFilter(jwtTokenProvider, userService),
-                        UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(
+                        new JwtTokenFilter(jwtTokenProvider, userService),
+                        UsernamePasswordAuthenticationFilter.class
+                );
     }
 }

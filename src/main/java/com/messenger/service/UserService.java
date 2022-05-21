@@ -1,17 +1,17 @@
 package com.messenger.service;
 
+import com.messenger.dto.mapper.UserMapper;
+import com.messenger.dto.model.UserDto;
 import com.messenger.exception.EntityNotFoundException;
 import com.messenger.model.Image;
 import com.messenger.model.User;
 import com.messenger.repository.UserRepository;
 import com.messenger.security.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +20,11 @@ public class UserService {
     private final UserRepository userRepository;
     private final AuthenticationFacade authenticationFacade;
     private final ImageService imageService;
+    private final UserMapper userMapper;
+
+    public UserDto getUserDtoById(String id) {
+        return userMapper.createFrom(findById(id));
+    }
 
     public User findById(String id) {
         return userRepository.findById(id).orElseThrow(() ->
@@ -37,36 +42,37 @@ public class UserService {
         return userRepository.existsByUsername(username);
     }
 
-    public List<User> findByName(String name, Pageable pageable) {
-        return userRepository.findAllByName(name, pageable);
+    public Page<UserDto> findByName(String name, Pageable pageable) {
+        Page<User> users = userRepository.findAllByName(name, pageable);
+        return users.map(userMapper::createFrom);
     }
 
     public User save(User user) {
         return userRepository.save(user);
     }
 
-    public User updateName(String newName) {
+    public UserDto updateName(String newName) {
         User user = findById(authenticationFacade.getUserId());
 
         user.setName(newName);
 
-        return save(user);
+        return userMapper.createFrom(save(user));
     }
 
-    public User updateDescription(String newDescription) {
+    public UserDto updateDescription(String newDescription) {
         User user = findById(authenticationFacade.getUserId());
 
         user.setDescription(newDescription);
 
-        return save(user);
+        return userMapper.createFrom(save(user));
     }
 
-    public User updateImage(MultipartFile newImage) throws IOException {
+    public UserDto updateImage(MultipartFile newImage) {
         User user = findById(authenticationFacade.getUserId());
 
         Image image = imageService.save(newImage);
         user.setImageId(image.getId());
 
-        return save(user);
+        return userMapper.createFrom(save(user));
     }
 }

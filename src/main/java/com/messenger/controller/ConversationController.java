@@ -1,7 +1,7 @@
 package com.messenger.controller;
 
+import com.messenger.dto.model.ConversationDto;
 import com.messenger.dto.model.Response;
-import com.messenger.model.Conversation;
 import com.messenger.service.ConversationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -16,12 +16,12 @@ public class ConversationController {
     private final ConversationService conversationService;
 
     @GetMapping
-    public Response<List<Conversation>> getConversations() {
-        return new Response<>(conversationService.getConversations());
+    public Response<List<ConversationDto>> getConversations() {
+        return new Response<>(conversationService.getConversationDtos());
     }
 
     @PostMapping
-    public Response<Conversation> createConversation(@RequestBody Conversation conversation) {
-        return new Response<>(conversationService.save(conversation));
+    public Response<ConversationDto> createConversation(@RequestBody ConversationDto conversationDto) {
+        return new Response<>(conversationService.save(conversationDto));
     }
 }

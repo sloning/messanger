@@ -1,5 +1,7 @@
 package com.messenger.service;
 
+import com.messenger.dto.mapper.MessageMapper;
+import com.messenger.dto.model.MessageDto;
 import com.messenger.exception.BadRequestException;
 import com.messenger.exception.EntityNotFoundException;
 import com.messenger.model.EsMessage;
@@ -27,6 +29,7 @@ public class MessageService {
     private final AuthenticationFacade authenticationFacade;
     private final ConversationRepository conversationRepository;
     private final EsMessageRepository esMessageRepository;
+    private final MessageMapper messageMapper;
 
     public List<EsMessage> search(String text, String conversation) {
         if (text != null && conversation != null) {
@@ -40,10 +43,11 @@ public class MessageService {
         return esMessageRepository.findAllByTextAndConversation(text, conversation);
     }
 
-    public Page<Message> findByConversation(String conversation, Pageable pageable) {
+    public Page<MessageDto> findByConversation(String conversation, Pageable pageable) {
         Pageable queryPageable = getPageableForEachUser(pageable);
 
-        return messageRepository.findAllByConversation(conversation, queryPageable);
+        Page<Message> messagesPage = messageRepository.findAllByConversation(conversation, queryPageable);
+        return messagesPage.map(messageMapper::createFrom);
     }
 
     private Pageable getPageableForEachUser(Pageable pageable) {
@@ -52,11 +56,24 @@ public class MessageService {
         return PageRequest.of(pageNumber, pageSize, Sort.Direction.DESC, "date");
     }
 
-    public Message save(Message message) {
+    public MessageDto save(MessageDto messageDto) {
+        Message message = messageMapper.createFrom(messageDto);
+        message = save(message);
+        return messageMapper.createFrom(message);
+    }
+
+    private Message save(Message message) {
         checkPermissionsToSaveMessage(message);
+        validateMessage(message);
         EsMessage esMessage = new EsMessage(message);
         esMessageRepository.save(esMessage);
         return messageRepository.save(message);
+    }
+
+    private void validateMessage(Message message) {
+        if (message.getText() == null && message.getImageId() == null) {
+            throw new BadRequestException("Message can not be empty!");
+        }
     }
 
     public void delete(String id) {

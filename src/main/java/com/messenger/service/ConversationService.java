@@ -1,5 +1,7 @@
 package com.messenger.service;
 
+import com.messenger.dto.mapper.ConversationMapper;
+import com.messenger.dto.model.ConversationDto;
 import com.messenger.exception.BadRequestException;
 import com.messenger.exception.EntityAlreadyExistsException;
 import com.messenger.model.Conversation;
@@ -17,8 +19,13 @@ public class ConversationService {
 
     private final ConversationRepository conversationRepository;
     private final AuthenticationFacade authenticationFacade;
+    private final ConversationMapper conversationMapper;
 
-    public List<Conversation> getConversations() {
+    public List<ConversationDto> getConversationDtos() {
+        return conversationMapper.createListFrom(getConversations());
+    }
+
+    private List<Conversation> getConversations() {
         String userId = authenticationFacade.getUserId();
 
         List<Conversation> conversations = conversationRepository.findAllByUser1(userId);
@@ -27,9 +34,11 @@ public class ConversationService {
         return conversations;
     }
 
-    public Conversation save(Conversation conversation) {
+    public ConversationDto save(ConversationDto conversationDto) {
+        Conversation conversation = conversationMapper.createFrom(conversationDto);
         checkPermission(conversation);
-        return conversationRepository.save(conversation);
+        conversation = conversationRepository.save(conversation);
+        return conversationMapper.createFrom(conversation);
     }
 
     private void checkPermission(Conversation conversation) {
