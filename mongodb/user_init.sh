@@ -8,7 +8,7 @@ if [ -n "${MONGO_INITDB_ROOT_USERNAME:-}" ] && [ -n "${MONGO_INITDB_ROOT_PASSWOR
 mongo -u $MONGO_INITDB_ROOT_USERNAME -p $MONGO_INITDB_ROOT_PASSWORD<<EOF
 db=db.getSiblingDB('messenger');
 db.createUser({
-  user:  '$MONGO_INITDB_ROOT_USERNAME',
+  user: '$MONGO_INITDB_ROOT_USERNAME',
   pwd: '$MONGO_INITDB_ROOT_PASSWORD',
   roles: [{
     role: 'readWrite',
