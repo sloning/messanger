@@ -16,5 +16,4 @@ public class User {
     private String name;
     private String description;
     private String imageId;
-    private String publicKey;
 }

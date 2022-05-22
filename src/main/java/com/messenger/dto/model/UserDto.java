@@ -10,5 +10,4 @@ public class UserDto {
     private String name;
     private String description;
     private byte[] image;
-    private String publicKey;
 }

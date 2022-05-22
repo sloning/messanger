@@ -22,7 +22,6 @@ public class UserMapper {
         user.setUsername(registerDto.getUsername());
         user.setPassword(registerDto.getPassword());
         user.setDescription(registerDto.getDescription());
-        user.setPublicKey(registerDto.getPublicKey());
         user.setImageId(registerDto.getImageId());
 
         return user;
@@ -35,7 +34,6 @@ public class UserMapper {
         userDto.setDescription(user.getDescription());
         userDto.setEmail(user.getUsername());
         userDto.setImage(getImage(user));
-        userDto.setPublicKey(user.getPublicKey());
         userDto.setId(user.getId());
 
         return userDto;
