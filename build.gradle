@@ -45,7 +45,7 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
-String imageName = "${project.name}:latest"
+String imageName = "${project.name}"
 
 docker {
     dockerfile file('Dockerfile')

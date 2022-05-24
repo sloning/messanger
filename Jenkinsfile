@@ -19,7 +19,6 @@ pipeline {
         stage("Deploy") {
             steps {
                 sh "./gradlew dockerStop"
-                sh "./gradlew dockerRemoveContainer"
                 sh "./gradlew dockerRun"
             }
         }
