@@ -54,7 +54,7 @@ docker {
 }
 
 dockerRun {
-    name imageName
+    name "${project.name}"
     image imageName
     ports '80:80'
     arguments '--network=messenger_default'
