@@ -30,6 +30,8 @@ dependencies {
     implementation 'org.springframework.data:spring-data-elasticsearch:4.3.4'
     implementation 'org.springframework.boot:spring-boot-configuration-processor:2.6.7'
     implementation 'org.projectlombok:lombok:1.18.24'
+    implementation 'org.springframework.boot:spring-boot-starter-websocket:2.6.7'
+    implementation 'org.springframework:spring-messaging:5.3.20'
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'org.springframework.boot:spring-boot-devtools:2.6.7'
     runtimeOnly 'org.postgresql:postgresql'
@@ -43,7 +45,7 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
-String imageName = "${project.name}"
+String imageName = "${project.name}:latest"
 
 docker {
     dockerfile file('Dockerfile')
@@ -52,7 +54,7 @@ docker {
 }
 
 dockerRun {
-    name "${project.name}"
+    name imageName
     image imageName
     ports '80:80'
     arguments '--network=messenger_default'
