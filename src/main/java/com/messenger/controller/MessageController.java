@@ -5,6 +5,7 @@ import com.messenger.dto.model.Response;
 import com.messenger.model.EsMessage;
 import com.messenger.service.ChatService;
 import com.messenger.service.MessageService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,21 +26,25 @@ public class MessageController {
     private final ChatService chatService;
 
     @PostMapping
+    @Operation(summary = "send message through http")
     public Response<MessageDto> sendMessage(@Valid @RequestBody MessageDto messageDto) {
         return new Response<>(messageService.save(messageDto));
     }
 
     @GetMapping("/search")
+    @Operation(summary = "full-text search through chat by text field")
     public Response<List<EsMessage>> findMessages(@RequestParam String text, @RequestParam String chat) {
         return new Response<>(messageService.search(text, chat));
     }
 
     @GetMapping
+    @Operation(summary = "get messages by chat")
     public Response<Page<MessageDto>> showChat(@RequestParam String chat, Pageable pageable) {
         return new Response<>(messageService.findByChat(chat, pageable));
     }
 
     @DeleteMapping
+    @Operation(summary = "delete message by id")
     public Response<Void> deleteMessage(@RequestBody String id) {
         messageService.delete(id);
         return new Response<>("Message was successfully deleted");
