@@ -13,6 +13,6 @@ public class JwtUserFactory {
     }
 
     public static JwtUser create(String id, Long version) {
-        return new JwtUser(id, null, null, version);
+        return new JwtUser(id, id, null, version);
     }
 }

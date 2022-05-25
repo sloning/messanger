@@ -2,8 +2,10 @@ package com.messenger.service;
 
 import com.messenger.dto.mapper.ConversationMapper;
 import com.messenger.dto.model.ConversationDto;
+import com.messenger.dto.model.MessageDto;
 import com.messenger.exception.BadRequestException;
 import com.messenger.exception.EntityAlreadyExistsException;
+import com.messenger.exception.EntityNotFoundException;
 import com.messenger.model.Conversation;
 import com.messenger.repository.ConversationRepository;
 import com.messenger.security.AuthenticationFacade;
@@ -29,6 +31,17 @@ public class ConversationService {
         String userId = authenticationFacade.getUserId();
 
         return conversationRepository.findAllByParticipantsContaining(userId);
+    }
+
+    public Conversation getConversationById(String id) {
+        return conversationRepository.findById(id).orElseThrow(() ->
+                new EntityNotFoundException("Conversation was not found")
+        );
+    }
+
+    public List<String> getReceivers(MessageDto messageDto) {
+        Conversation conversation = getConversationById(messageDto.getConversation());
+        return conversation.getParticipants();
     }
 
     public ConversationDto save(ConversationDto conversationDto) {
