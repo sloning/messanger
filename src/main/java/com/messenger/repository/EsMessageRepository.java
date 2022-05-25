@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface EsMessageRepository extends ElasticsearchRepository<EsMessage, String> {
 
-    List<EsMessage> findAllByTextAndConversation(String text, String conversation);
+    List<EsMessage> findAllByTextAndChatId(String text, String chatId);
 }

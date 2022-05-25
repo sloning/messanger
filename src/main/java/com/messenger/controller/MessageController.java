@@ -3,7 +3,7 @@ package com.messenger.controller;
 import com.messenger.dto.model.MessageDto;
 import com.messenger.dto.model.Response;
 import com.messenger.model.EsMessage;
-import com.messenger.service.ConversationService;
+import com.messenger.service.ChatService;
 import com.messenger.service.MessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,7 +22,7 @@ public class MessageController {
 
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final MessageService messageService;
-    private final ConversationService conversationService;
+    private final ChatService chatService;
 
     @PostMapping
     public Response<MessageDto> sendMessage(@Valid @RequestBody MessageDto messageDto) {
@@ -30,15 +30,13 @@ public class MessageController {
     }
 
     @GetMapping("/search")
-    public Response<List<EsMessage>> findMessages(@RequestParam String text,
-                                                  @RequestParam String conversation) {
-        return new Response<>(messageService.search(text, conversation));
+    public Response<List<EsMessage>> findMessages(@RequestParam String text, @RequestParam String chat) {
+        return new Response<>(messageService.search(text, chat));
     }
 
     @GetMapping
-    public Response<Page<MessageDto>> showConversation(@RequestParam String conversation,
-                                                       Pageable pageable) {
-        return new Response<>(messageService.findByConversation(conversation, pageable));
+    public Response<Page<MessageDto>> showChat(@RequestParam String chat, Pageable pageable) {
+        return new Response<>(messageService.findByChat(chat, pageable));
     }
 
     @DeleteMapping
@@ -50,13 +48,9 @@ public class MessageController {
     @MessageMapping("/messages")
     public void exchangeMessages(MessageDto messageDto) {
         messageDto = messageService.save(messageDto);
-        List<String> receivers = conversationService.getReceivers(messageDto);
+        List<String> receivers = chatService.getReceivers(messageDto);
         for (String receiver : receivers) {
-            simpMessagingTemplate.convertAndSendToUser(
-                    receiver,
-                    "/queue/messages",
-                    messageDto
-            );
+            simpMessagingTemplate.convertAndSendToUser(receiver, "/queue/messages", messageDto);
         }
     }
 }

@@ -7,6 +7,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface MessageRepository extends MongoRepository<Message, String> {
 
-    Page<Message> findAllByConversation(String conversation, Pageable pageable);
+    Page<Message> findAllByChatId(String chatId, Pageable pageable);
 
 }

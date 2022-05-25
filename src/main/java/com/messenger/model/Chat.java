@@ -6,7 +6,7 @@ import org.springframework.data.annotation.Id;
 import java.util.List;
 
 @Data
-public class Conversation {
+public class Chat {
 
     @Id
     private String id;

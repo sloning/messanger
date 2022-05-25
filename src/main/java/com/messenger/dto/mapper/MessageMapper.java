@@ -18,10 +18,10 @@ public class MessageMapper {
         messageDto.setId(message.getId());
         messageDto.setText(message.getText());
         messageDto.setDate(message.getDate());
-        messageDto.setConversation(message.getConversation());
+        messageDto.setChatId(message.getChatId());
         messageDto.setRead(message.isRead());
-        messageDto.setSender(message.getSender());
-        messageDto.setSentByUser(message.getSender().equals(authenticationFacade.getUserId()));
+        messageDto.setSenderId(message.getSenderId());
+        messageDto.setSentByUser(message.getSenderId().equals(authenticationFacade.getUserId()));
         messageDto.setImageId(message.getImageId());
 
         return messageDto;
@@ -30,8 +30,8 @@ public class MessageMapper {
     public Message createFrom(MessageDto messageDto) {
         Message message = new Message();
 
-        message.setConversation(messageDto.getConversation());
-        message.setSender(authenticationFacade.getUserId());
+        message.setChatId(messageDto.getChatId());
+        message.setSenderId(authenticationFacade.getUserId());
         message.setText(messageDto.getText());
         message.setImageId(messageDto.getImageId());
         message.setDate(messageDto.getDate());

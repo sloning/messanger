@@ -10,8 +10,8 @@ public class Message {
 
     @Id
     private String id;
-    private String conversation;
-    private String sender;
+    private String chatId;
+    private String senderId;
     private String text;
     private String imageId;
     private Date date = new Date();

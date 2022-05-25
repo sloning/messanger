@@ -6,7 +6,7 @@ import com.messenger.exception.BadRequestException;
 import com.messenger.exception.EntityNotFoundException;
 import com.messenger.model.EsMessage;
 import com.messenger.model.Message;
-import com.messenger.repository.ConversationRepository;
+import com.messenger.repository.ChatRepository;
 import com.messenger.repository.EsMessageRepository;
 import com.messenger.repository.MessageRepository;
 import com.messenger.security.AuthenticationFacade;
@@ -27,26 +27,26 @@ public class MessageService {
 
     private final MessageRepository messageRepository;
     private final AuthenticationFacade authenticationFacade;
-    private final ConversationRepository conversationRepository;
+    private final ChatRepository chatRepository;
     private final EsMessageRepository esMessageRepository;
     private final MessageMapper messageMapper;
 
-    public List<EsMessage> search(String text, String conversation) {
-        if (text != null && conversation != null) {
-            return findByTextAndConversation(text, conversation);
+    public List<EsMessage> search(String text, String chat) {
+        if (text != null && chat != null) {
+            return findByTextAndChat(text, chat);
         } else {
             throw new BadRequestException("Parameters can not be null");
         }
     }
 
-    public List<EsMessage> findByTextAndConversation(String text, String conversation) {
-        return esMessageRepository.findAllByTextAndConversation(text, conversation);
+    public List<EsMessage> findByTextAndChat(String text, String chat) {
+        return esMessageRepository.findAllByTextAndChatId(text, chat);
     }
 
-    public Page<MessageDto> findByConversation(String conversation, Pageable pageable) {
+    public Page<MessageDto> findByChat(String chat, Pageable pageable) {
         Pageable queryPageable = getPageableForEachUser(pageable);
 
-        Page<Message> messagesPage = messageRepository.findAllByConversation(conversation, queryPageable);
+        Page<Message> messagesPage = messageRepository.findAllByChatId(chat, queryPageable);
         return messagesPage.map(messageMapper::createFrom);
     }
 
@@ -84,12 +84,12 @@ public class MessageService {
     private void checkPermissionsToSaveMessage(Message message) {
         String userId = authenticationFacade.getUserId();
 
-        if (!Objects.equals(message.getSender(), userId)) {
+        if (!Objects.equals(message.getSenderId(), userId)) {
             throw new BadRequestException("You can not send messages from other users");
         }
 
-        if (message.getConversation() == null || conversationRepository.findById(message.getConversation()).isEmpty()) {
-            throw new EntityNotFoundException("This conversation does not exists");
+        if (message.getChatId() == null || chatRepository.findById(message.getChatId()).isEmpty()) {
+            throw new EntityNotFoundException("This chat does not exists");
         }
     }
 
@@ -101,7 +101,7 @@ public class MessageService {
             throw new EntityNotFoundException("This message does not exists");
         }
 
-        if (!optionalMessage.get().getSender().equals(userId)) {
+        if (!optionalMessage.get().getSenderId().equals(userId)) {
             throw new BadRequestException("You can not delete other's messages");
         }
     }

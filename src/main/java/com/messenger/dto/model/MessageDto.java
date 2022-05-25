@@ -11,9 +11,9 @@ public class MessageDto {
 
     private String id;
     @NotNull
-    private String conversation;
+    private String chatId;
     @NotNull
-    private String sender;
+    private String senderId;
     @Length(min = 1, message = "Message must contain at least 1 symbol or image")
     private String text;
     private String imageId;

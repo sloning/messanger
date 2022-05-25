@@ -20,8 +20,8 @@ public class EsMessage {
 
     @Id
     private String id;
-    private String conversation;
-    private String sender;
+    private String chatId;
+    private String senderId;
     @Field(type = FieldType.Text, analyzer = "ru_en")
     private String text;
     private String imageId;
@@ -30,8 +30,8 @@ public class EsMessage {
 
     public EsMessage(Message message) {
         id = message.getId();
-        conversation = message.getConversation();
-        sender = message.getSender();
+        chatId = message.getChatId();
+        senderId = message.getSenderId();
         text = message.getText();
         imageId = message.getImageId();
         date = message.getDate();
