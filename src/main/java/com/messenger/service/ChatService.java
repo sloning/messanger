@@ -44,6 +44,21 @@ public class ChatService {
         return chat.getParticipants();
     }
 
+    public boolean isExists(String id) {
+        return chatRepository.findById(id).isPresent();
+    }
+
+    public boolean isParticipant(Chat chat) {
+        String userId = authenticationFacade.getUserId();
+
+        return chat.isUserParticipant(userId);
+    }
+
+    public boolean isParticipant(String chatId) {
+        Chat chat = getChatById(chatId);
+        return isParticipant(chat);
+    }
+
     public ChatDto save(ChatDto chatDto) {
         Chat chat = chatMapper.createFrom(chatDto);
         checkPermission(chat);
@@ -52,13 +67,14 @@ public class ChatService {
     }
 
     private void checkPermission(Chat chat) {
-        String userId = authenticationFacade.getUserId();
-
-        if (!Objects.equals(userId, chat.getFirstUser()) &&
-                !Objects.equals(userId, chat.getSecondUser())) {
+        if (!isParticipant(chat)) {
             throw new BadRequestException("You can not create new chat for other users");
         }
 
+        checkForDuplicate(chat);
+    }
+
+    private void checkForDuplicate(Chat chat) {
         List<Chat> chats = getChatList();
         for (Chat dbChat : chats) {
             if (Objects.equals(dbChat.getFirstUser(), chat.getFirstUser()) &&

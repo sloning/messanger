@@ -8,6 +8,7 @@ import com.messenger.security.AuthenticationFacade;
 import com.messenger.service.MessageService;
 import com.messenger.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +23,7 @@ import java.util.List;
 public class ChatMapper {
 
     private final AuthenticationFacade authenticationFacade;
+    @Lazy
     private final MessageService messageService;
     private final UserService userService;
 

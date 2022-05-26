@@ -20,4 +20,13 @@ public class Chat {
         return participants.get(1);
     }
 
+    public boolean isUserParticipant(String userId) {
+        for (String participant : participants) {
+            if (userId.equals(participant)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

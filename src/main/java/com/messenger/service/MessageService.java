@@ -6,7 +6,6 @@ import com.messenger.exception.BadRequestException;
 import com.messenger.exception.EntityNotFoundException;
 import com.messenger.model.EsMessage;
 import com.messenger.model.Message;
-import com.messenger.repository.ChatRepository;
 import com.messenger.repository.EsMessageRepository;
 import com.messenger.repository.MessageRepository;
 import com.messenger.security.AuthenticationFacade;
@@ -18,7 +17,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -27,7 +25,7 @@ public class MessageService {
 
     private final MessageRepository messageRepository;
     private final AuthenticationFacade authenticationFacade;
-    private final ChatRepository chatRepository;
+    private final ChatService chatService;
     private final EsMessageRepository esMessageRepository;
     private final MessageMapper messageMapper;
 
@@ -44,10 +42,17 @@ public class MessageService {
     }
 
     public Page<MessageDto> findByChat(String chat, Pageable pageable) {
+        checkIsUserParticipant(chat);
         Pageable queryPageable = getPageableForEachUser(pageable);
 
         Page<Message> messagesPage = messageRepository.findAllByChatId(chat, queryPageable);
         return messagesPage.map(messageMapper::createFrom);
+    }
+
+    private void checkIsUserParticipant(String chat) {
+        if (!chatService.isParticipant(chat)) {
+            throw new BadRequestException("You are not participant of that chat");
+        }
     }
 
     private Pageable getPageableForEachUser(Pageable pageable) {
@@ -70,6 +75,17 @@ public class MessageService {
         return messageRepository.save(message);
     }
 
+    private void checkPermissionsToSaveMessage(Message message) {
+        checkIsUserParticipant(message.getChatId());
+        checkIsChatExists(message.getChatId());
+    }
+
+    private void checkIsChatExists(String chatId) {
+        if (chatId == null || !chatService.isExists(chatId)) {
+            throw new EntityNotFoundException("This chat does not exists");
+        }
+    }
+
     private void validateMessage(Message message) {
         if (message.getText() == null && message.getImageId() == null) {
             throw new BadRequestException("Message can not be empty!");
@@ -79,18 +95,6 @@ public class MessageService {
     public void delete(String id) {
         checkPermissionToDeleteMessage(id);
         messageRepository.deleteById(id);
-    }
-
-    private void checkPermissionsToSaveMessage(Message message) {
-        String userId = authenticationFacade.getUserId();
-
-        if (!Objects.equals(message.getSenderId(), userId)) {
-            throw new BadRequestException("You can not send messages from other users");
-        }
-
-        if (message.getChatId() == null || chatRepository.findById(message.getChatId()).isEmpty()) {
-            throw new EntityNotFoundException("This chat does not exists");
-        }
     }
 
     private void checkPermissionToDeleteMessage(String messageId) {
