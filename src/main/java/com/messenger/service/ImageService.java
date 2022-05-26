@@ -22,16 +22,16 @@ public class ImageService {
     private final ImageMapper imageMapper;
     private final AuthenticationFacade authenticationFacade;
 
-    public Image findById(String id) {
+    public Image getById(String id) {
         return imageRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Image was not found"));
     }
 
-    public Optional<Image> findByOwner(String id) {
-        return imageRepository.findByOwnerId(id);
+    public Optional<Image> findById(String id) {
+        return imageRepository.findById(id);
     }
 
     public ImageDto getInfo(String id) {
-        Image image = findById(id);
+        Image image = getById(id);
         return imageMapper.createFrom(image);
     }
 

@@ -11,6 +11,7 @@ public class ChatDto {
     private String id;
     @NotNull
     private List<String> participants;
+    private List<UserDto> participantDtoList;
     private byte[] image;
     private MessageDto lastMessage;
 }

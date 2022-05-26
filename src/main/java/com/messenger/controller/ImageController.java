@@ -11,9 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.zip.DataFormatException;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/image")
@@ -22,13 +19,13 @@ public class ImageController {
     private final ImageService imageService;
 
     @PostMapping
-    public Response<Image> uploadImage(@RequestParam("image") MultipartFile image) throws IOException {
+    public Response<Image> uploadImage(@RequestParam("image") MultipartFile image) {
         return new Response<>(imageService.save(image));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<byte[]> getImage(@PathVariable String id) throws DataFormatException, IOException {
-        Image image = imageService.findById(id);
+    public ResponseEntity<byte[]> getImage(@PathVariable String id) {
+        Image image = imageService.getById(id);
 
         return ResponseEntity.ok()
                 .contentType(MediaType.valueOf(image.getType()))

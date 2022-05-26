@@ -9,6 +9,8 @@ import com.messenger.util.ImageUtility;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 @RequiredArgsConstructor
 public class UserMapper {
@@ -40,7 +42,7 @@ public class UserMapper {
     }
 
     private byte[] getImage(User user) {
-        Image image = imageService.findById(user.getImageId());
-        return ImageUtility.decompressImage(image.getImageBytes());
+        Optional<Image> optionalImage = imageService.findById(user.getImageId());
+        return optionalImage.map(image -> ImageUtility.decompressImage(image.getImageBytes())).orElse(null);
     }
 }
