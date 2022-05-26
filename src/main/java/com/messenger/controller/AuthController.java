@@ -21,12 +21,12 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public Response<Map<String, String>> registerUser(@Valid @RequestBody RegisterDto registerDto) {
+    public Response<Map<String, Object>> registerUser(@Valid @RequestBody RegisterDto registerDto) {
         return new Response<>(authService.registerUser(registerDto));
     }
 
     @PostMapping("/login")
-    public Response<Map<String, String>> loginUser(@Valid @RequestBody LoginDto loginDto) {
+    public Response<Map<String, Object>> loginUser(@Valid @RequestBody LoginDto loginDto) {
         return new Response<>(authService.loginUser(loginDto));
     }
 

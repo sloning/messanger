@@ -37,7 +37,7 @@ public class UserController {
 
     @PutMapping("/password")
     @Operation(summary = "update user's password")
-    public Response<Map<String, String>> updatePassword(@Valid @RequestBody PasswordChangeDto passwordChangeDto) {
+    public Response<Map<String, Object>> updatePassword(@Valid @RequestBody PasswordChangeDto passwordChangeDto) {
         return new Response<>(authService.updatePassword(passwordChangeDto));
     }
 

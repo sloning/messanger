@@ -26,7 +26,7 @@ public class AuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationFacade authenticationFacade;
 
-    public Map<String, String> registerUser(RegisterDto registerDto) {
+    public Map<String, Object> registerUser(RegisterDto registerDto) {
         if (userService.isUserExists(registerDto.getUsername())) {
             throw new EntityAlreadyExistsException(
                     String.format("User with username: %s already exists", registerDto.getUsername())
@@ -40,7 +40,7 @@ public class AuthService {
         return getToken(user);
     }
 
-    public Map<String, String> loginUser(LoginDto loginDto) {
+    public Map<String, Object> loginUser(LoginDto loginDto) {
         User user = userService.findByUsername(loginDto.getUsername());
 
         checkPasswords(user.getPassword(), loginDto.getPassword());
@@ -58,7 +58,7 @@ public class AuthService {
         }
     }
 
-    public Map<String, String> updatePassword(PasswordChangeDto passwordChangeDto) {
+    public Map<String, Object> updatePassword(PasswordChangeDto passwordChangeDto) {
         User user = userService.findById(authenticationFacade.getUserId());
 
         checkPasswords(user.getPassword(), passwordChangeDto.getOldPassword());
@@ -70,12 +70,12 @@ public class AuthService {
         return getToken(user);
     }
 
-    public Map<String, String> getToken(User user) {
+    public Map<String, Object> getToken(User user) {
         String token = jwtTokenProvider.createToken(user.getId(), user.getVersion().toString());
 
-        Map<String, String> response = new HashMap<>();
+        Map<String, Object> response = new HashMap<>();
         response.put("token", token);
-        response.put("userId", user.getId());
+        response.put("user", userMapper.createFrom(user));
         return response;
     }
 }
