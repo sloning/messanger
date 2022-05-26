@@ -42,6 +42,9 @@ public class UserMapper {
     }
 
     private byte[] getImage(User user) {
+        if (user.getImageId() == null) {
+            return null;
+        }
         Optional<Image> optionalImage = imageService.findById(user.getImageId());
         return optionalImage.map(image -> ImageUtility.decompressImage(image.getImageBytes())).orElse(null);
     }
