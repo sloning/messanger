@@ -2,12 +2,11 @@ package com.messenger.dto.mapper;
 
 import com.messenger.dto.model.ChatDto;
 import com.messenger.dto.model.MessageDto;
+import com.messenger.dto.model.UserDto;
 import com.messenger.model.Chat;
-import com.messenger.model.Image;
 import com.messenger.security.AuthenticationFacade;
-import com.messenger.service.ImageService;
 import com.messenger.service.MessageService;
-import com.messenger.util.ImageUtility;
+import com.messenger.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -25,15 +23,15 @@ public class ChatMapper {
 
     private final AuthenticationFacade authenticationFacade;
     private final MessageService messageService;
-    private final ImageService imageService;
+    private final UserService userService;
 
     public ChatDto createFrom(Chat chat) {
         ChatDto chatDto = new ChatDto();
 
         chatDto.setId(chat.getId());
-        chatDto.setParticipants(chat.getParticipants());
         chatDto.setLastMessage(getLastMessage(chat));
-        chatDto.setImage(getImage(chat));
+        List<UserDto> userDtoList = determineOtherUsers(chat);
+        chatDto.setParticipantDtoList(userDtoList);
 
         return chatDto;
     }
@@ -47,20 +45,16 @@ public class ChatMapper {
         return null;
     }
 
-    private byte[] getImage(Chat chat) {
-        String userId = authenticationFacade.getUserId();
-        if (chat.getParticipants().size() > 2) {
-            return null;
+    private List<UserDto> determineOtherUsers(Chat chat) {
+        String currentUser = authenticationFacade.getUserId();
+        List<UserDto> users = new ArrayList<>();
+        for (String participant : chat.getParticipants()) {
+            if (!participant.equals(currentUser)) {
+                UserDto user = userService.getUserDtoById(participant);
+                users.add(user);
+            }
         }
-        if (chat.getFirstUser().equals(userId)) {
-            return getImageBytes(chat.getSecondUser());
-        }
-        return getImageBytes(chat.getFirstUser());
-    }
-
-    private byte[] getImageBytes(String userId) {
-        Optional<Image> optionalImage = imageService.findByOwner(userId);
-        return optionalImage.map(image -> ImageUtility.decompressImage(image.getImageBytes())).orElse(null);
+        return users;
     }
 
     public Chat createFrom(ChatDto chatDto) {
