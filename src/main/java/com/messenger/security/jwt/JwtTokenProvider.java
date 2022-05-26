@@ -47,23 +47,6 @@ public class JwtTokenProvider {
                 .sign(algorithm);
     }
 
-    public String refreshToken(String token) {
-        Map<String, Claim> claims = getClaims(token);
-        Map<String, String> stringClaims = new HashMap<>();
-        for (Map.Entry<String, Claim> entry : claims.entrySet()) {
-            if (stringClaims.put(entry.getKey(), entry.getValue().asString()) != null) {
-                throw new IllegalStateException("Duplicate key");
-            }
-        }
-        Date expirationDate = new Date(new Date().getTime() + appProperties.getAuth().getTokenExpirationMSec());
-
-        return JWT.create()
-                .withPayload(stringClaims)
-                .withIssuer(ISSUER)
-                .withExpiresAt(expirationDate)
-                .sign(algorithm);
-    }
-
     public String resolveToken(HttpServletRequest req) {
         String bearerToken = req.getHeader(appProperties.getAuth().getHeaderString());
         if (bearerToken != null && bearerToken.startsWith(appProperties.getAuth().getTokenPrefix())) {
@@ -96,9 +79,13 @@ public class JwtTokenProvider {
         return Long.parseLong(claims.get("version").asString());
     }
 
-    public Authentication getAuthentication(String token) {
+    public JwtUser getJwtUser(String token) {
         Map<String, Claim> claims = getClaims(token);
-        JwtUser userDetails = JwtUserFactory.create(getUserId(claims), getUserVersion(claims));
+        return JwtUserFactory.create(getUserId(claims), getUserVersion(claims));
+    }
+
+    public Authentication getAuthentication(String token) {
+        JwtUser userDetails = getJwtUser(token);
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 }

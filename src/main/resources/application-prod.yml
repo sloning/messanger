@@ -15,7 +15,7 @@ spring:
 app:
   auth:
     tokenSecret: ${security_secret}
-    tokenExpirationMSec: 86400000
+    tokenExpirationMSec: 86400000 # 24 hours
     tokenPrefix: "Bearer "
     headerString: "Authorization"
     cors:

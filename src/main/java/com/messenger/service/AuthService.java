@@ -9,10 +9,12 @@ import com.messenger.exception.EntityNotFoundException;
 import com.messenger.model.User;
 import com.messenger.security.AuthenticationFacade;
 import com.messenger.security.jwt.JwtTokenProvider;
+import com.messenger.security.jwt.JwtUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,6 +48,16 @@ public class AuthService {
         checkPasswords(user.getPassword(), loginDto.getPassword());
 
         return getToken(user);
+    }
+
+    public Map<String, String> refreshToken(HttpServletRequest request) {
+        String token = jwtTokenProvider.resolveToken(request);
+        JwtUser jwtUser = jwtTokenProvider.getJwtUser(token);
+        String newToken = jwtTokenProvider.createToken(jwtUser.getId(), jwtUser.getVersion().toString());
+        Map<String, String> response = new HashMap<>();
+        response.put("token", newToken);
+
+        return response;
     }
 
     private boolean isPasswordsNotEqual(String dbPassword, String password) {
