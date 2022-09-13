@@ -9,14 +9,14 @@ import java.util.Date;
 @Data
 public class MessageDto {
 
-    private String id;
+    private Long id;
     @NotNull
-    private String chatId;
+    private Long chatId;
     @NotNull
-    private String senderId;
+    private Long senderId;
     @Length(min = 1, message = "Message must contain at least 1 symbol or image")
     private String text;
-    private String imageId;
+    private Long imageId;
     private boolean isSentByUser;
     private Date date = new Date();
     private boolean isRead = false;

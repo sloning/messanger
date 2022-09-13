@@ -10,7 +10,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class JwtUser implements UserDetails {
 
-    private final String id;
+    private final Long id;
     private final String username;
     private final String password;
     private final Long version;
@@ -50,7 +50,7 @@ public class JwtUser implements UserDetails {
         return true;
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 

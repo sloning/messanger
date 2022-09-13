@@ -22,11 +22,15 @@ public class UserService {
     private final ImageService imageService;
     private final UserMapper userMapper;
 
-    public UserDto getUserDtoById(String id) {
+    public UserDto getUserDtoById(Long id) {
         return userMapper.createFrom(findById(id));
     }
 
-    public User findById(String id) {
+    public UserDto getUserDtoByUser(User user) {
+        return userMapper.createFrom(user);
+    }
+
+    public User findById(Long id) {
         return userRepository.findById(id).orElseThrow(() ->
                 new EntityNotFoundException(String.format("User with id: %s was not found", id))
         );

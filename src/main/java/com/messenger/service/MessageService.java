@@ -29,7 +29,7 @@ public class MessageService {
     private final EsMessageRepository esMessageRepository;
     private final MessageMapper messageMapper;
 
-    public List<EsMessage> search(String text, String chat) {
+    public List<EsMessage> search(String text, Long chat) {
         if (text != null && chat != null) {
             return findByTextAndChat(text, chat);
         } else {
@@ -37,11 +37,11 @@ public class MessageService {
         }
     }
 
-    public List<EsMessage> findByTextAndChat(String text, String chat) {
+    public List<EsMessage> findByTextAndChat(String text, Long chat) {
         return esMessageRepository.findAllByTextAndChatId(text, chat);
     }
 
-    public Page<MessageDto> findByChat(String chat, Pageable pageable) {
+    public Page<MessageDto> findByChat(Long chat, Pageable pageable) {
         checkIsUserParticipant(chat);
         Pageable queryPageable = getPageableForEachUser(pageable);
 
@@ -49,7 +49,7 @@ public class MessageService {
         return messagesPage.map(messageMapper::createFrom);
     }
 
-    private void checkIsUserParticipant(String chat) {
+    private void checkIsUserParticipant(Long chat) {
         if (!chatService.isParticipant(chat)) {
             throw new BadRequestException("You are not participant of that chat");
         }
@@ -80,7 +80,7 @@ public class MessageService {
         checkIsChatExists(message.getChatId());
     }
 
-    private void checkIsChatExists(String chatId) {
+    private void checkIsChatExists(Long chatId) {
         if (chatId == null || !chatService.isExists(chatId)) {
             throw new EntityNotFoundException("This chat does not exists");
         }
@@ -92,13 +92,13 @@ public class MessageService {
         }
     }
 
-    public void delete(String id) {
+    public void delete(Long id) {
         checkPermissionToDeleteMessage(id);
         messageRepository.deleteById(id);
     }
 
-    private void checkPermissionToDeleteMessage(String messageId) {
-        String userId = authenticationFacade.getUserId();
+    private void checkPermissionToDeleteMessage(Long messageId) {
+        Long userId = authenticationFacade.getUserId();
         Optional<Message> optionalMessage = messageRepository.findById(messageId);
 
         if (optionalMessage.isEmpty()) {

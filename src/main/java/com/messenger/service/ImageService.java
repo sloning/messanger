@@ -22,15 +22,15 @@ public class ImageService {
     private final ImageMapper imageMapper;
     private final AuthenticationFacade authenticationFacade;
 
-    public Image getById(String id) {
+    public Image getById(Long id) {
         return imageRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Image was not found"));
     }
 
-    public Optional<Image> findById(String id) {
+    public Optional<Image> findById(Long id) {
         return imageRepository.findById(id);
     }
 
-    public ImageDto getInfo(String id) {
+    public ImageDto getInfo(Long id) {
         Image image = getById(id);
         return imageMapper.createFrom(image);
     }
@@ -54,7 +54,7 @@ public class ImageService {
         return save(newImage);
     }
 
-    public void delete(String id) {
+    public void delete(Long id) {
         imageRepository.deleteById(id);
     }
 }

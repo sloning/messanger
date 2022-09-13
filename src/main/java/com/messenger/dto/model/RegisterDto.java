@@ -19,6 +19,6 @@ public class RegisterDto {
     @NotBlank
     private String name;
     private String description;
-    private String imageId;
+    private Long imageId;
     private String publicKey;
 }

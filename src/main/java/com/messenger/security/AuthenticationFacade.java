@@ -15,7 +15,7 @@ public class AuthenticationFacade {
         return SecurityContextHolder.getContext().getAuthentication();
     }
 
-    public String getUserId() {
+    public Long getUserId() {
         Authentication auth = getAuthentication();
         if (!(auth instanceof AnonymousAuthenticationToken)) {
             JwtUser jwtUser = (JwtUser) auth.getPrincipal();

@@ -1,28 +1,34 @@
 package com.messenger.model;
 
 import lombok.Data;
-import org.springframework.data.annotation.Id;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import java.util.List;
 
 @Data
+@Entity
 public class Chat {
 
     @Id
-    private String id;
-    private List<String> participants;
+    @GeneratedValue
+    private Long id;
+    @OneToMany(targetEntity = User.class)
+    private List<User> participants;
 
-    public String getFirstUser() {
+    public User getFirstUser() {
         return participants.get(0);
     }
 
-    public String getSecondUser() {
+    public User getSecondUser() {
         return participants.get(1);
     }
 
-    public boolean isUserParticipant(String userId) {
-        for (String participant : participants) {
-            if (userId.equals(participant)) {
+    public boolean isUserParticipant(User user) {
+        for (User participant : participants) {
+            if (user.equals(participant)) {
                 return true;
             }
         }

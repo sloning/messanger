@@ -7,6 +7,7 @@ import com.messenger.exception.BadRequestException;
 import com.messenger.exception.EntityAlreadyExistsException;
 import com.messenger.exception.EntityNotFoundException;
 import com.messenger.model.Chat;
+import com.messenger.model.User;
 import com.messenger.repository.ChatRepository;
 import com.messenger.security.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
@@ -22,39 +23,41 @@ public class ChatService {
     private final ChatRepository chatRepository;
     private final AuthenticationFacade authenticationFacade;
     private final ChatMapper chatMapper;
+    private final UserService userService;
 
     public List<ChatDto> getChatDtos() {
         return chatMapper.createListFrom(getChatList());
     }
 
     private List<Chat> getChatList() {
-        String userId = authenticationFacade.getUserId();
+        Long userId = authenticationFacade.getUserId();
 
         return chatRepository.findAllByParticipantsContaining(userId);
     }
 
-    public Chat getChatById(String id) {
+    public Chat getChatById(Long id) {
         return chatRepository.findById(id).orElseThrow(() ->
                 new EntityNotFoundException("Chat was not found")
         );
     }
 
-    public List<String> getReceivers(MessageDto messageDto) {
+    public List<User> getReceivers(MessageDto messageDto) {
         Chat chat = getChatById(messageDto.getChatId());
         return chat.getParticipants();
     }
 
-    public boolean isExists(String id) {
+    public boolean isExists(Long id) {
         return chatRepository.findById(id).isPresent();
     }
 
     public boolean isParticipant(Chat chat) {
-        String userId = authenticationFacade.getUserId();
+        Long userId = authenticationFacade.getUserId();
+        User user = userService.findById(userId);
 
-        return chat.isUserParticipant(userId);
+        return chat.isUserParticipant(user);
     }
 
-    public boolean isParticipant(String chatId) {
+    public boolean isParticipant(Long chatId) {
         Chat chat = getChatById(chatId);
         return isParticipant(chat);
     }

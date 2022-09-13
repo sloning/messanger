@@ -33,10 +33,10 @@ public class JwtTokenProvider {
         algorithm = Algorithm.HMAC256(appProperties.getAuth().getTokenSecret());
     }
 
-    public String createToken(String id, String version) {
+    public String createToken(Long id, String version) {
         Date expirationDate = new Date(new Date().getTime() + appProperties.getAuth().getTokenExpirationMSec());
 
-        Map<String, String> claims = new HashMap<>();
+        Map<String, Object> claims = new HashMap<>();
         claims.put("id", id);
         claims.put("version", version);
 
@@ -71,8 +71,8 @@ public class JwtTokenProvider {
         return JWT.decode(token).getClaims();
     }
 
-    public String getUserId(Map<String, Claim> claims) {
-        return claims.get("id").asString();
+    public Long getUserId(Map<String, Claim> claims) {
+        return claims.get("id").asLong();
     }
 
     public Long getUserVersion(Map<String, Claim> claims) {

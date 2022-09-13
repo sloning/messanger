@@ -1,17 +1,6 @@
 version: '3.8'
 
 services:
-  messenger_mongodb:
-    container_name: messenger_mongodb
-    build:
-      context: ./mongodb
-      dockerfile: Dockerfile
-    volumes:
-      - /var/lib/messenger_mongodb/data
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: ${mongodb_username}
-      MONGO_INITDB_ROOT_PASSWORD: ${mongodb_password}
-
   messenger_elastic:
     container_name: messenger_elastic
     build:

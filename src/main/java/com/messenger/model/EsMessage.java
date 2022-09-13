@@ -19,12 +19,12 @@ import java.util.Date;
 public class EsMessage {
 
     @Id
-    private String id;
-    private String chatId;
-    private String senderId;
+    private Long id;
+    private Long chatId;
+    private Long senderId;
     @Field(type = FieldType.Text, analyzer = "ru_en")
     private String text;
-    private String imageId;
+    private Long imageId;
     private Date date = new Date();
     private boolean isRead = false;
 

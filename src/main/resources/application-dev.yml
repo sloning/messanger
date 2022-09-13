@@ -2,12 +2,15 @@ spring:
   elasticsearch:
     username: ${elasticsearch_username}
     password: ${elasticsearch_password}
-  data:
-    mongodb:
-      host: ${mongodb_host}
-      username: ${mongodb_username}
-      password: ${mongodb_password}
-      database: messenger
+  datasource:
+    url: ${db_host}
+    driver-class-name: org.postgresql.Driver
+    username: ${db_username}
+    password: ${db_password}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQL10Dialect
 
 app:
   auth:

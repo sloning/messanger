@@ -1,19 +1,23 @@
 package com.messenger.model;
 
 import lombok.Data;
-import org.springframework.data.annotation.Id;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.util.Date;
 
 @Data
+@Entity
 public class Message {
 
     @Id
-    private String id;
-    private String chatId;
-    private String senderId;
+    @GeneratedValue
+    private Long id;
+    private Long chatId;
+    private Long senderId;
     private String text;
-    private String imageId;
+    private Long imageId;
     private Date date = new Date();
     private boolean isRead = false;
 }

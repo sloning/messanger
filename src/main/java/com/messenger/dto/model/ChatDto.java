@@ -8,9 +8,9 @@ import java.util.List;
 @Data
 public class ChatDto {
 
-    private String id;
+    private Long id;
     @NotNull
-    private List<String> participants;
+    private List<Long> participants;
     private List<UserDto> participantDtoList;
     private byte[] image;
     private MessageDto lastMessage;

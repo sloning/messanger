@@ -24,7 +24,7 @@ public class ImageController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<byte[]> getImage(@PathVariable String id) {
+    public ResponseEntity<byte[]> getImage(@PathVariable Long id) {
         Image image = imageService.getById(id);
 
         return ResponseEntity.ok()
@@ -33,12 +33,12 @@ public class ImageController {
     }
 
     @GetMapping("/info/{id}")
-    public Response<ImageDto> getInfo(@PathVariable String id) {
+    public Response<ImageDto> getInfo(@PathVariable Long id) {
         return new Response<>(imageService.getInfo(id));
     }
 
     @DeleteMapping("/{id}")
-    public Response<Void> deleteImage(@PathVariable String id) {
+    public Response<Void> deleteImage(@PathVariable Long id) {
         imageService.delete(id);
         return new Response<>("Image was successfully deleted");
     }

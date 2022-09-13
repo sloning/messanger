@@ -7,8 +7,8 @@
 * Spring Boot
 * Spring Data
 * OpenAPI
-* MongoDB
-* ElasticSearch
+* PostgreSQL
+* ElasticSearch (будет заменено)
 * Docker
 * Jenkins
 

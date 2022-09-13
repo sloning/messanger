@@ -12,7 +12,7 @@ public class JwtUserFactory {
         return new JwtUser(user.getId(), user.getUsername(), user.getPassword(), user.getVersion());
     }
 
-    public static JwtUser create(String id, Long version) {
-        return new JwtUser(id, id, null, version);
+    public static JwtUser create(Long id, Long version) {
+        return new JwtUser(id, null, null, version);
     }
 }

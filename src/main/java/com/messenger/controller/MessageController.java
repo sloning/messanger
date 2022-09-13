@@ -3,6 +3,7 @@ package com.messenger.controller;
 import com.messenger.dto.model.MessageDto;
 import com.messenger.dto.model.Response;
 import com.messenger.model.EsMessage;
+import com.messenger.model.User;
 import com.messenger.service.ChatService;
 import com.messenger.service.MessageService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,19 +34,19 @@ public class MessageController {
 
     @GetMapping("/search")
     @Operation(summary = "full-text search through chat by text field")
-    public Response<List<EsMessage>> findMessages(@RequestParam String text, @RequestParam String chat) {
+    public Response<List<EsMessage>> findMessages(@RequestParam String text, @RequestParam Long chat) {
         return new Response<>(messageService.search(text, chat));
     }
 
     @GetMapping
     @Operation(summary = "get messages by chat")
-    public Response<Page<MessageDto>> showChat(@RequestParam String chat, Pageable pageable) {
+    public Response<Page<MessageDto>> showChat(@RequestParam Long chat, Pageable pageable) {
         return new Response<>(messageService.findByChat(chat, pageable));
     }
 
     @DeleteMapping
     @Operation(summary = "delete message by id")
-    public Response<Void> deleteMessage(@RequestBody String id) {
+    public Response<Void> deleteMessage(@RequestBody Long id) {
         messageService.delete(id);
         return new Response<>("Message was successfully deleted");
     }
@@ -53,9 +54,9 @@ public class MessageController {
     @MessageMapping("/messages")
     public void exchangeMessages(MessageDto messageDto) {
         messageDto = messageService.save(messageDto);
-        List<String> receivers = chatService.getReceivers(messageDto);
-        for (String receiver : receivers) {
-            simpMessagingTemplate.convertAndSendToUser(receiver, "/queue/messages", messageDto);
+        List<User> receivers = chatService.getReceivers(messageDto);
+        for (User receiver : receivers) {
+            simpMessagingTemplate.convertAndSendToUser(receiver.getId().toString(), "/queue/messages", messageDto);
         }
     }
 }

@@ -4,6 +4,7 @@ import com.messenger.dto.model.ChatDto;
 import com.messenger.dto.model.MessageDto;
 import com.messenger.dto.model.UserDto;
 import com.messenger.model.Chat;
+import com.messenger.model.User;
 import com.messenger.security.AuthenticationFacade;
 import com.messenger.service.MessageService;
 import com.messenger.service.UserService;
@@ -48,11 +49,12 @@ public class ChatMapper {
     }
 
     private List<UserDto> determineOtherUsers(Chat chat) {
-        String currentUser = authenticationFacade.getUserId();
+        Long currentUserId = authenticationFacade.getUserId();
+        User currentUser = userService.findById(currentUserId);
         List<UserDto> users = new ArrayList<>();
-        for (String participant : chat.getParticipants()) {
+        for (User participant : chat.getParticipants()) {
             if (!participant.equals(currentUser)) {
-                UserDto user = userService.getUserDtoById(participant);
+                UserDto user = userService.getUserDtoByUser(participant);
                 users.add(user);
             }
         }
@@ -63,7 +65,11 @@ public class ChatMapper {
         Chat chat = new Chat();
 
         chat.setId(chatDto.getId());
-        chat.setParticipants(chatDto.getParticipants());
+        List<User> users = new ArrayList<>();
+        for (Long userId : chatDto.getParticipants()) {
+            users.add(userService.findById(userId));
+        }
+        chat.setParticipants(users);
 
         return chat;
     }

@@ -1,14 +1,19 @@
 package com.messenger.model;
 
 import lombok.Data;
-import org.springframework.data.annotation.Id;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 @Data
+@Entity
 public class Image {
 
     @Id
-    private String id;
-    private String ownerId;
+    @GeneratedValue
+    private Long id;
+    private Long ownerId;
     private String name;
     private String type;
     private byte[] imageBytes;
