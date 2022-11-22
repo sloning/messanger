@@ -25,3 +25,4 @@ docker-compose up -d
 ```
 ./gradlew bootJar docker dockerRun
 ```
+
